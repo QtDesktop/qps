@@ -962,6 +962,11 @@ ControlBar::ControlBar(QWidget *parent) : QFrame(parent)
     setLayout(layout);
 }
 
+void ControlBar::reloadState() 
+{
+	check_thread->setChecked(flag_show_thread);
+}
+
 void PSTABLE_SETTREEMODE(bool mode);
 void ControlBar::setMode(bool treemode) // just.. interface function
 {

@@ -972,13 +972,17 @@ int Proc::read_system() //
         else
             flag_thread_ok = false;
 
+#ifdef LINUX
+				//Ubuntu does not updates 'shedstat' if first thread is sleep and another threads are works
+				flag_schedstat = false;
+#else				
         /* check schedstat  */
         strcpy(path, "/proc/1/schedstat"); // some system doesn't have
         if (!stat(path, (struct stat *)buf))
             flag_schedstat = true;
         else
             flag_schedstat = false;
-
+#endif
         strcpy(path, "/proc/stat");
         if ((n = read_file(path, buf, sizeof(buf) - 1)) <= 0)
             return 0;
@@ -1991,7 +1995,7 @@ void Proc::read_proc_all()
                 // printf(" [%s] %d
                 // %d\n",pi->command.toAscii().data(),pi->generation,current_gen);
 
-                if (flag_show_thread and flag_thread_ok)
+								if (flag_show_thread and flag_thread_ok)
                     read_pid_tasks(pid); // for threads
 
                 // add to History expect thread

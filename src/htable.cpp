@@ -35,6 +35,7 @@
 #include <QStyleOption>
 #include <QShortcut>
 #include <QPalette>
+#include <QApplication>
 
 #define DEBUG qDebug
 //#define DEBUG
@@ -943,7 +944,7 @@ HeadedTable::HeadedTable(QWidget *parent, int opts) : QWidget(parent)
     // synchronize horizontal scrolling of head and body
     connect(body->horizontalScrollBar(), SIGNAL(valueChanged(int)), head,
             SLOT(scrollSideways(int)));
-    fontChange(font()); // *** need for init
+    fontChange(); // *** need for init
                         //	vp=new VPointer((QWidget *)QObject::parent());
                         //	vp->hide();		//memory leak!!
 }
@@ -951,16 +952,16 @@ HeadedTable::HeadedTable(QWidget *parent, int opts) : QWidget(parent)
 HeadedTable::~HeadedTable() {}
 
 // ok : move to Qttableview
-void HeadedTable::fontChange(const QFont &oldFont)
+void HeadedTable::fontChange()
 {
     // DEBUG("fontChange()\n");
-    int fontHeight = fontMetrics().height() + 1;
+    int fontHeight = QApplication::fontMetrics().height() + 1;
     // printf("cell height =%d \n", cellH);
     if (fontHeight % 2 != 0)
         fontHeight++; // for pretty fold-lines
     head->setCellHeight(fontHeight + 5);
     head->setMaximumHeight(head->cellHeight());
-    body->setCellHeight(fontHeight);
+    body->setCellHeight(fontHeight + 2);
     treestep = fontHeight;
     gadget_space = folding ? fontHeight + (fontHeight / 2) : 0;
     //	QWidget::fontChange ( oldFont );

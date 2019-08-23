@@ -401,7 +401,7 @@ bool Procview::accept_proc(Procinfo *p)
 
     result = true;
 
-    // BAD
+		// BAD
     if (false and viewproc == NETWORK)
     {
         /*
@@ -465,7 +465,11 @@ bool Procview::accept_proc(Procinfo *p)
         return true;
 
     pid = pid.setNum(p->pid); //=QString::number(p->pid);
-    if (pid.contains(filterstr, Qt::CaseInsensitive))
+    if (pid.contains(filterstr, Qt::CaseSensitive))
+        return true;
+		//show all threads for specified PID
+    pid = pid.setNum(p->tgid); //=QString::number(p->pid);
+    if (pid.contains(filterstr, Qt::CaseSensitive))
         return true;
 
     /// printf("search_Box =%s , %s

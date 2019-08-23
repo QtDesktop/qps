@@ -304,6 +304,8 @@ Qps::Qps()
         set_update_period(1300); // default
         resize(640, 370);        // default initial size
     }
+		pstable->fontChange();
+		ctrlbar->reloadState();
 
     set_table_mode(procview->treeview); //  Pstable::refresh() occur
     make_command_menu();                // after qpsrc reading
@@ -1548,6 +1550,7 @@ void Qps::config_change()
 
     write_settings();
     bar_visibility();
+		pstable->fontChange();
     // DEL infobar->configure();
     /// resizeEvent(0);		// in case it caused geometry change
 
@@ -1914,6 +1917,7 @@ bool Qps::read_settings()
             *(fs->var) = false;
     }
     // procview->treeview=set.value("treeview").toBool();
+    flag_show_thread = set.value("show_thread", false).toBool();
 
     int i = set.value("interval").toInt();
     set_update_period(i);
@@ -1999,8 +2003,9 @@ void Qps::write_settings() // save setting
             sl.append(fs->name); // fprintf(f, " %s", fs->name);
     }
     set.setValue("flags", sl);
-
-    //	fprintf(f,	"swaplim: %d\n"	"interval: %d\n",
+    set.setValue("show_thread", flag_show_thread);
+    
+		//	fprintf(f,	"swaplim: %d\n"	"interval: %d\n",
     //				swaplim_percent ? -swaplimit :
     // swaplimit,
     //				update_period);

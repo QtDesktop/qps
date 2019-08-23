@@ -304,6 +304,7 @@ class HeadedTable : public QWidget
     virtual void setSelected(int row, bool sel){};
     virtual bool isSelected(int row) { return false; }
     virtual void checkTableModel(){};
+    void fontChange();
 signals:
     void titleClicked(int col);
     void selectionChanged();
@@ -321,7 +322,6 @@ signals:
     void repaintAll();
 
   protected:
-    void fontChange(const QFont &oldFont);
     // These must be implemented in subclasses
     virtual QString title(int col) = 0;
     virtual QString text(int row, int col) = 0;

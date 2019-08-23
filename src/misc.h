@@ -237,6 +237,7 @@ signals:
     void event_search_box_changed();
     void event_command_pressed();
     void setPaused(bool);
+		void reloadState();
 
   protected:
     void resizeEvent(QResizeEvent *);

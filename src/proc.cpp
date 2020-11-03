@@ -97,27 +97,6 @@ enum
     SSDISCONNECTING /* in process of disconnecting	*/
 };
 
-#define QPS_SCHED_AFFINITY ok
-
-#ifdef QPS_SCHED_AFFINITY
-#ifndef SYS_sched_setaffinity
-#define SYS_sched_setaffinity 241
-#endif
-#ifndef SYS_sched_getaffinity
-#define SYS_sched_getaffinity 242
-#endif
-
-// Needed for some glibc
-int qps_sched_setaffinity(pid_t pid, unsigned int len, unsigned long *mask)
-{
-    return syscall(SYS_sched_setaffinity, pid, len, mask);
-};
-int qps_sched_getaffinity(pid_t pid, unsigned int len, unsigned long *mask)
-{
-    return syscall(SYS_sched_getaffinity, pid, len, mask);
-};
-#endif
-
 /*
    Thread Problems.
    pthread_exit()
@@ -2262,14 +2241,9 @@ double Procinfo::get_tms()
 
 unsigned long Procinfo::get_affcpu()
 {
-#ifdef QPS_SCHED_AFFINITY
-    if (qps_sched_getaffinity(pid, sizeof(unsigned long), &affcpu) == -1)
-        affcpu = (unsigned long)0;
-#else
     if (sched_getaffinity(pid, sizeof(unsigned long), (cpu_set_t *)&affcpu) ==
         -1)
         affcpu = (unsigned long)0;
-#endif
     return affcpu;
 }
 

@@ -1488,15 +1488,22 @@ void Qps::send_to_selected(int sig)
 {
     bool allow = (sig != SIGTERM && sig != SIGHUP && sig != SIGKILL);
     QString msg = (sig == SIGTERM ?
-                   tr("Do you really want to terminate the selected process(es)?") :
+                   tr("Do you really want to terminate the selected process(es)?\n") :
                    sig == SIGHUP ?
-                   tr("Do you really want to hang up the selected process(es)?") :
+                   tr("Do you really want to hang up the selected process(es)?\n") :
                    sig == SIGKILL ?
-                   tr("Do you really want to kill the selected process(es)?") :
+                   tr("Do you really want to kill the selected process(es)?\n") :
                    QString());
-    for (int i = 0; i < procview->linear_procs.size(); i++)
+    QVector<Procinfo *> procs = procview->linear_procs;
+    for (auto p : procs)
     {
-        Procinfo *p = procview->linear_procs[i];
+        if (p->selected)
+        {
+            msg.append(tr("\n%1 (PID:%2)").arg(p->command).arg(p->pid));
+        }
+    }
+    for (auto p : procs)
+    {
         if (p->selected)
         {
             if (!allow)
